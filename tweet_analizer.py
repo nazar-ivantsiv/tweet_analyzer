@@ -4,6 +4,8 @@
 '''
 Tweet analyzer
 
+Searches for tweets by word/tag with possibility to add LANGUAGE and GEOCODE filters
+
     analyzing twits by word ( how many tweets has this word)
     geo analyzing
     language analyzing
@@ -30,7 +32,7 @@ def oauth_req(url, key, secret, http_method='GET', post_body='', http_headers=No
 	print('Server answer: {}'.format(resp['status']))
 	return content
 
-def analyze_by_word(word, tweets_to_get=100, language_geocode=('',''), result_type='mixed'):		# Also filters by language
+def analyze_by_word(word, tweets_to_get=100, language='', geocode='', result_type='mixed'):		# Also filters by language
 	'''
 	Finds the tweets with <word> in it.
 
@@ -48,11 +50,11 @@ def analyze_by_word(word, tweets_to_get=100, language_geocode=('',''), result_ty
 			''.format(word, tweets_to_get, result_type) 
 			)	
 
-	if language_geocode[0] != '':
-		query += '&lang={}'.format(language_geocode[0])
-	if language_geocode[1] != '':
-		query += '&geocode={}'.format(language_geocode[1])
-	print(query)
+	if language != '':
+		query += '&lang={}'.format(language)
+	if geocode != '':
+		query += '&geocode={}'.format(geocode)
+
 	search_response = oauth_req( query, ACCESS_TOKEN, ACCESS_TOKEN_SECRET )
 	response = json.loads(search_response)
 
@@ -77,13 +79,11 @@ def print_tweets(response):
 			print(response[k])
 
 
-# Search for tweets by word/tag with possibility to add LANGUAGE and GEOCODE filters
-
 geocode = '37.781157,-122.398720,10mi'
-# It is useful to add a function to get the geocode by location name (ex. Lviv)
+# It is useful to add a function to get the geocode by location name (ex. 'Lviv')
 
 word = raw_input('Word/tag to search for: ')
 
-#analyze_by_word( word, 5, ('', geocode) )
-#analyze_by_word( word, 5, ('ja', '') )
-analyze_by_word( word, 5, ('', '') )
+analyze_by_word( word, 5, '', geocode )
+#analyze_by_word( word, 5, 'ja' )
+#analyze_by_word( word, 100 )
